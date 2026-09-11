@@ -6,7 +6,7 @@ app.http('Hello', {
     handler: async (request, context) => {
         context.log(`Http function processed request for url "${request.url}"`);
 
-        const name = request.query.get('name') || await request.text() || 'world';
+        const name = request.query.get('name') || await request.text() || 'this is world of ymim';
 
         return { body: `Hello, ${name}!` };
     }
