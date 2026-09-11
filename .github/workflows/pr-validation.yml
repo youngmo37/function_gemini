@@ -1,0 +1,36 @@
+name: PR Quality Check & Test
+
+on:
+  pull_request:
+    branches:
+      - main     # main 브랜치 대상 PR일 때 트리거
+    paths-ignore:
+      - '**.md'  # 문서 파일 수정은 검증 대상에서 제외
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    # 1. PR 코드 체크아웃
+    - name: Checkout PR Code
+      uses: actions/checkout@v4
+
+    # 2. Node.js 환경 설정
+    - name: Setup Node.js Environment
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+        cache: 'npm' # 의존성 캐싱으로 빌드 속도 향상
+
+    # 3. 의존성 패키지 설치
+    - name: Install Dependencies
+      run: npm ci
+
+    # 4. 코드 린트/스타일 검사 (설정되어 있는 경우)
+    - name: Run Linter
+      run: npm run lint --if-present
+
+    # 5. 단위 테스트 실행
+    - name: Run Unit Tests
+      run: npm test --if-present
